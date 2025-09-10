@@ -5,6 +5,8 @@ from passlib.context import CryptContext
 from jose import jwt
 from datetime import datetime, timedelta
 from bson import ObjectId
+import os
+from fastapi import UploadFile
 
 SECRET_KEY = "YOUR_SECRET_KEY"   # replace with secure random string in .env
 ALGORITHM = "HS256"
@@ -79,6 +81,57 @@ async def delete_user(user_id: int):
     result = await db.users.delete_one({"user_id": user_id})
     return result.deleted_count > 0
 
+UPLOAD_DIR = "uploads/profile_pics"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+async def update_profile(email: str, profile_data: dict, file: UploadFile = None):
+    update_fields = {}
+
+    # Add text fields
+    for k, v in profile_data.items():
+        if v is not None:
+            update_fields[k] = v
+
+    # Handle file upload
+    if file:
+        file_path = os.path.join(UPLOAD_DIR, f"{email}_{file.filename}")
+        with open(file_path, "wb") as f:
+            f.write(await file.read())
+        update_fields["profile_picture"] = file_path
+
+    if update_fields:
+        await db.users.update_one({"email": email}, {"$set": update_fields})
+        return True
+    return False
+
+async def get_profile(email: str):
+    user = await db.users.find_one({"email": email})
+    if not user:
+        return None
+
+    # Clean sensitive data
+    user["_id"] = str(user["_id"])
+    if "password" in user:
+        del user["password"]
+
+    return user
+
+async def delete_profile(email: str):
+    user = await db.users.find_one({"email": email})
+    if not user:
+        return False
+
+    # Delete profile picture file if exists
+    if "profile_picture" in user and user["profile_picture"]:
+        try:
+            if os.path.exists(user["profile_picture"]):
+                os.remove(user["profile_picture"])
+        except Exception as e:
+            print(f"Error deleting profile picture: {e}")
+
+    # Remove user document
+    result = await db.users.delete_one({"email": email})
+    return result.deleted_count > 0
 
 
 
