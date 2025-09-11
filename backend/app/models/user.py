@@ -17,14 +17,3 @@ class UserProfile(BaseModel):
     bio: Optional[str] = None
     profile_picture: Optional[str] = None
 
-# Input schema for prediction
-class HealthInput(BaseModel):
-    age: int
-    bmi: float
-    systolicbp: int
-    diastolicbp: int
-    heartrate: int
-    glucose: int
-
-class PredictResponse(BaseModel):
-    condition: str

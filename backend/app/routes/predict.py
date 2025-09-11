@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from app.services.ml_service import predict_condition
 from app.routes.auth import get_current_user
-from app.models.user import HealthInput, PredictResponse
+from app.models.ml_model import HealthInput, PredictResponse
 
 router = APIRouter()
 
