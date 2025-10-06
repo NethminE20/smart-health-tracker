@@ -1,6 +1,7 @@
+# models/ml_model.py
 from pydantic import BaseModel
+from typing import List, Optional
 
-# Input schema for prediction
 class HealthInput(BaseModel):
     age: int
     bmi: float
@@ -9,5 +10,15 @@ class HealthInput(BaseModel):
     heartrate: int
     glucose: int
 
+class Issue(BaseModel):
+    parameter: str
+    value: float
+    status: str
+    suggestion: str
+
 class PredictResponse(BaseModel):
     condition: str
+    message: str
+    issues: List[Issue]  # always a list, even if empty
+
+

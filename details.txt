@@ -1,0 +1,2 @@
+#To run backend
+docker start -a backend
