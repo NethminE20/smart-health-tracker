@@ -1,2 +1,2 @@
 # smart-health-tracker
-Smart Health Tracker is a full-stack application that allows users to monitor their health and get disease predictions using machine learning. Users can log their health data (age, BMI, blood pressure, glucose, etc.), and the app predicts risks for diseases like diabetes and heart disease.
+Smart Health Tracker is a full-stack application that enables users to monitor their health and receive disease risk predictions powered by machine learning models. By logging key health parameters such as age, BMI, blood pressure, glucose level, and more, the system analyzes the data to predict potential risks of diseases like diabetes and heart disease, helping users take proactive steps toward better health management.
